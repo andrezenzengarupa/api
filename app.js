@@ -1,10 +1,13 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 
 var peliasConfig = require( 'pelias-config' ).generate(require('./schema'));
 
 if( peliasConfig.api.accessLog ){
   app.use( require( './middleware/access_log' ).createAccessLogger( peliasConfig.api.accessLog ) );
 }
+
+app.use(express.json());
 
 /** ----------------------- pre-processing-middleware ----------------------- **/
 

@@ -20,12 +20,14 @@ var sanitizers = {
 /** ----------------------- middleware ------------------------ **/
 var middleware = {
   calcSize: require('../middleware/sizeCalculator'),
-  requestLanguage: require('../middleware/requestLanguage')
+  requestLanguage: require('../middleware/requestLanguage'),
+  auth: require('../middleware/auth')
 };
 
 /** ----------------------- controllers ----------------------- **/
 
 var controllers = {
+  auth: require('../controller/auth'),
   coarse_reverse: require('../controller/coarse_reverse'),
   mdToHTML: require('../controller/markdownToHtml'),
   libpostal: require('../controller/libpostal'),
@@ -281,6 +283,7 @@ function addRoutes(app, peliasConfig) {
     attribution: createRouter([
       controllers.mdToHTML(peliasConfig.api, './public/attribution.md')
     ]),
+    auth: createRouter([middleware.auth]),
     search: createRouter([
       sanitizers.search.middleware(peliasConfig.api),
       middleware.requestLanguage,
@@ -415,6 +418,10 @@ function addRoutes(app, peliasConfig) {
   app.get ( base + 'attribution',          routers.attribution );
   app.get (        '/attribution',         routers.attribution );
   app.get (        '/status',              routers.status );
+
+  // auth create token
+  app.post( base + 'create-token',        controllers.auth.createToken );
+  app.use ( middleware.auth );
 
   // backend dependent endpoints
   app.get ( base + 'place',                routers.place );
