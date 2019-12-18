@@ -1,7 +1,9 @@
+var peliasConfig = require('pelias-config').generate();
+
 const config = {
-  secret: `${process.env.APP_PRIVATE_AUTH_KEY}` || `pelias_OSM_2019`,
-  expiresIn: '365d',
-  authToken: process.env.PASSWORD_AUTH_TOKEN || 'pelias_2019'
+  secret: peliasConfig.auth.secret || 'pelias_OSM_2019',
+  expiresIn: peliasConfig.auth.expiresin || '365d',
+  authToken: peliasConfig.auth.authtoken || 'pelias_2019'
 };
 
 module.exports = config;
